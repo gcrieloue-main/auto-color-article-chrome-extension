@@ -1,0 +1,19 @@
+{
+  "name": "Auto Color Article Extension",
+  "description": "Add a color for each paragraph to ease readibility",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "hello.html",
+    "default_icon": "auto_color_article_extension.png"
+  },
+  "permissions": [
+    "contextMenus"
+  ],
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": ["http://*/*", "https://*/*"]
+    }
+  ]
+}
