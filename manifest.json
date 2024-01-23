@@ -1,19 +1,17 @@
 {
   "name": "Auto Color Article Extension",
   "description": "Add a color for each paragraph to ease readibility",
-  "version": "1.0",
+  "version": "1.1",
   "manifest_version": 3,
   "action": {
-    "default_icon": "auto_color_article_extension.png"
+    "default_icon": "auto_color_article_extension.png",
+    "default_title": "Colorize this article"
   },
   "permissions": [
-    "contextMenus",
-    "storage",
-    "scripting"
+    "scripting",
+    "activeTab"
   ],
-  "host_permissions": [
-    "http://*/*", "https://*/*"
-],
+  "host_permissions": ["https://*/*","https://*/*"],
   "background": {
     "service_worker": "scripts/background.js"
   }

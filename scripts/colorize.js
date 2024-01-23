@@ -1,14 +1,4 @@
-chrome.storage.local.get(["auto_article_extension_enabled"]).then((result) => {
-  auto_article_extension_enabled = result.auto_article_extension_enabled;
-  chrome.storage.local.set({
-    auto_article_extension_enabled: !auto_article_extension_enabled,
-  });
-  if (!auto_article_extension_enabled) {
-    refresh();
-  } else {
-    colorize();
-  }
-});
+colorize();
 
 function colorize() {
   const article = document.querySelector("article");
@@ -32,10 +22,4 @@ function colorize() {
       item.style.color = "rgb(36, 36, 36)";
     });
   }
-}
-
-function refresh() {
-  chrome.runtime.sendMessage({ message: "refresh" }, function (response) {
-    console.log(response.message);
-  });
 }
