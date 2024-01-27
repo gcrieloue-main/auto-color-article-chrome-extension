@@ -1,22 +1,16 @@
-async function getCurrentTab() {
-  let queryOptions = { active: true, lastFocusedWindow: true };
-  let [tab] = await chrome.tabs.query(queryOptions);
-  return tab;
-}
-
 chrome.runtime.onMessage.addListener(async function (
   request,
   sender,
   sendResponse
 ) {
-  const currentTab = await getCurrentTab();
+  const queryOptions = { active: true, lastFocusedWindow: true };
+  const [currentTab] = await chrome.tabs.query(queryOptions);
   const currentTabId = currentTab.id;
   if (request.message === "enable") {
     chrome.action.enable(currentTabId);
     sendResponse({ message: "enable", status: "200", data: null });
     return true;
   } else if (request.message === "disable") {
-    console.log({ disable: currentTabId, currentTab });
     chrome.action.disable(currentTabId);
     chrome.action.setBadgeBackgroundColor({ color: "#FFD6A5" }, () => {});
     chrome.action.setBadgeText(
@@ -48,8 +42,10 @@ chrome.tabs.onActivated.addListener(async function (activeInfo) {
 });
 
 chrome.action.onClicked.addListener((tab) => {
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    files: ["scripts/colorize.js"],
-  });
+  if (tab.url?.startsWith("http")) {
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ["scripts/colorize.js"],
+    });
+  }
 });
