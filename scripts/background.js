@@ -11,34 +11,42 @@ chrome.runtime.onMessage.addListener(async function (
     sendResponse({ message: "enable", status: "200", data: null });
     return true;
   } else if (request.message === "disable") {
-    chrome.action.disable(currentTabId);
-    chrome.action.setBadgeBackgroundColor({ color: "#FFD6A5" }, () => {});
-    chrome.action.setBadgeText(
-      {
-        text: "!",
-        tabId: currentTabId,
-      },
-      () => {}
-    );
-    chrome.action.setTitle(
-      {
-        title: "Colorisation unavailable",
-        tabId: currentTabId,
-      },
-      () => {}
-    );
+    disableExtensionForTab(currentTabId);
     sendResponse({ message: "disable", status: "200", data: null });
     return true;
   }
 });
 
+function disableExtensionForTab(tabId) {
+  chrome.action.disable(currentTabId);
+  chrome.action.setBadgeBackgroundColor({ color: "#FFD6A5" }, () => {});
+  chrome.action.setBadgeText(
+    {
+      text: "!",
+      tabId: currentTabId,
+    },
+    () => {}
+  );
+  chrome.action.setTitle(
+    {
+      title: "Colorisation unavailable",
+      tabId: currentTabId,
+    },
+    () => {}
+  );
+}
+
 chrome.tabs.onActivated.addListener(async function (activeInfo) {
   const tab = await chrome.tabs.get(activeInfo.tabId);
   currentTabId = tab.id;
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    files: ["scripts/check_enable.js"],
-  });
+  if (tab.url?.startsWith("http")) {
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ["scripts/check_enable.js"],
+    });
+  } else {
+    disableExtensionForTab(currentTabId);
+  }
 });
 
 chrome.action.onClicked.addListener((tab) => {

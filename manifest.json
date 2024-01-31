@@ -7,10 +7,8 @@
     "default_icon": "auto_color_article_extension.png",
     "default_title": "Colorize this article"
   },
-  "permissions": [
-    "scripting",
-    "activeTab"
-  ],
+  "permissions": ["scripting"],
+  "host_permissions": ["https://*/*", "http://*/*"],
   "background": {
     "service_worker": "scripts/background.js"
   }
